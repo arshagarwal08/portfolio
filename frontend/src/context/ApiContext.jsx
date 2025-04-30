@@ -3,7 +3,8 @@ import { createContext, useContext } from 'react';
 const ApiContext = createContext();
 
 const APIProvider = ({ children }) => {
-  const baseUrl = 'https://portfolio-backend-beta-jet.vercel.app/';
+  // const baseUrl = 'https://portfolio-backend-3f72.onrender.com';
+  const baseUrl = 'dummy';
 
   return (
     <ApiContext.Provider value={{ baseUrl }}>
