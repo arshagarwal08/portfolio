@@ -3,7 +3,7 @@ import { createContext, useContext } from 'react';
 const ApiContext = createContext();
 
 const APIProvider = ({ children }) => {
-  const baseUrl = 'http://localhost:4000';
+  const baseUrl = 'https://portfolio-backend-3f72.onrender.com';
 
   return (
     <ApiContext.Provider value={{ baseUrl }}>
