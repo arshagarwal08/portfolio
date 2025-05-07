@@ -146,7 +146,7 @@ const About = () => {
                 </a>
               </div>
               <a
-                href="https://drive.google.com/file/d/1NQcUY3f8JqjVfJcAdaR6RsziFGpqStfU/view?usp=drive_link"
+                href="https://drive.google.com/file/d/1W_2MwQRGkwyYWvkfgBo28G_zdhUtPoLT/view?usp=drive_link"
                 download
                 className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors text-sm"
               >
