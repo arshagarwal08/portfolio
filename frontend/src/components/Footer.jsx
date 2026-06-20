@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 import { SiGeeksforgeeks, SiLeetcode } from "react-icons/si";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa";
 import { CgMail } from "react-icons/cg";
@@ -11,48 +11,47 @@ const Footer = () => {
       icon: <FaLinkedinIn size={20} />,
       href: "https://www.linkedin.com/in/arshagarwal08",
       label: "LinkedIn",
-      color: "hover:text-blue-400"
+      color: "hover:text-blue-400",
     },
     {
       icon: <FaGithub size={20} />,
       href: "https://github.com/arshagarwal08",
       label: "GitHub",
-      color: "hover:text-purple-400"
+      color: "hover:text-purple-400",
     },
     {
       icon: <CgMail size={20} />,
       href: "mailto:arshagarwal08@gmail.com",
       label: "Email",
-      color: "hover:text-red-400"
+      color: "hover:text-red-400",
     },
     {
       icon: <SiLeetcode size={20} />,
       href: "https://leetcode.com/arshagarwal08",
       label: "LeetCode",
-      color: "hover:text-yellow-400"
+      color: "hover:text-yellow-400",
     },
     {
       icon: <SiGeeksforgeeks size={20} />,
       href: "https://auth.geeksforgeeks.org/user/arshagapp37",
       label: "GeeksforGeeks",
-      color: "hover:text-green-400"
-    }
+      color: "hover:text-green-400",
+    },
   ];
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
   return (
     <footer className="relative bg-gray-900 text-gray-400 pt-12 pb-8 px-4 border-t border-transparent">
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-emerald-500 to-purple-500"></div>
-      
+
       <div className="max-w-screen-lg mx-auto">
         <div className="flex flex-col items-center gap-8">
-          
           <motion.button
             whileHover={{ y: -3 }}
             whileTap={{ scale: 0.95 }}
@@ -63,7 +62,7 @@ const Footer = () => {
             <FiArrowUp size={18} />
           </motion.button>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ staggerChildren: 0.1 }}
@@ -89,24 +88,12 @@ const Footer = () => {
             ))}
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center text-sm text-gray-500"
-          >
+          <motion.p className="text-center text-sm text-gray-500">
             &copy; {new Date().getFullYear()} Arsh Agarwal. All rights reserved.
           </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center text-xs text-gray-600 mt-2"
-          >
-            Built with React and Tailwind CSS
+          <motion.p className="text-center text-xs text-gray-600 mt-2">
+            Built with ♥ by Arsh Agarwal
           </motion.p>
         </div>
       </div>

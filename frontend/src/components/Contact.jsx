@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useApi } from '../context/ApiContext';
-import axios from 'axios';
+import emailjs from '@emailjs/browser';
 import { FiSend, FiMail, FiLinkedin, FiGithub } from 'react-icons/fi';
 import { SiLeetcode } from 'react-icons/si';
 
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const TEMPLATE_TO_ME = import.meta.env.VITE_EMAILJS_TEMPLATE1_ID;
+const TEMPLATE_TO_THEM = import.meta.env.VITE_EMAILJS_TEMPLATE2_ID;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
 const Contact = () => {
-  const { baseUrl } = useApi();
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [data, setData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState(null); // 'success' | 'error'
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -21,21 +21,37 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setStatus(null);
+
     try {
-      const response = await axios.post(baseUrl + "/contact", data);
-      if (response.data.success) {
-        setData({
-          name: "",
-          email: "",
-          message: "",
-        });
-        alert(response.data.message);
-      } else {
-        alert(response.data.message);
-      }
+      // Template 1 — notify you
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_TO_ME,
+        {
+          from_name: data.name,
+          from_email: data.email,
+          message: data.message,
+        },
+        PUBLIC_KEY
+      );
+
+      // Template 2 — auto reply to sender
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_TO_THEM,
+        {
+          to_name: data.name,
+          reply_to: data.email,
+        },
+        PUBLIC_KEY
+      );
+
+      setStatus('success');
+      setData({ name: '', email: '', message: '' });
     } catch (error) {
-      console.log("Error" + error);
-      alert('Something went wrong. Please try again later.');
+      console.error('EmailJS error:', error);
+      setStatus('error');
     } finally {
       setIsSubmitting(false);
     }
@@ -44,6 +60,8 @@ const Contact = () => {
   return (
     <section id="contact" className="py-20 px-4 sm:px-8 bg-gradient-to-b from-gray-800 to-gray-900">
       <div className="max-w-4xl mx-auto">
+
+        {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -55,11 +73,13 @@ const Contact = () => {
             Get In Touch
           </h2>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Have a project in mind or want to connect? Drop me a message!
+            Have a project in mind? Drop me a message and I'll get back to you within 24 hours.
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-12">
+
+          {/* Form */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -75,8 +95,8 @@ const Contact = () => {
                   value={data.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-800/70 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
                   placeholder=" "
+                  className="w-full px-4 py-3 bg-gray-800/70 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
                 />
                 <label className="absolute left-4 -top-3 px-1 bg-gray-800/70 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-blue-400">
                   Your Name
@@ -90,8 +110,8 @@ const Contact = () => {
                   value={data.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-800/70 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
                   placeholder=" "
+                  className="w-full px-4 py-3 bg-gray-800/70 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
                 />
                 <label className="absolute left-4 -top-3 px-1 bg-gray-800/70 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-blue-400">
                   Your Email
@@ -105,21 +125,47 @@ const Contact = () => {
                   value={data.message}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 bg-gray-800/70 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
                   placeholder=" "
-                ></textarea>
+                  className="w-full px-4 py-3 bg-gray-800/70 text-white rounded-lg border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 peer"
+                />
                 <label className="absolute left-4 -top-3 px-1 bg-gray-800/70 text-gray-400 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:top-3 peer-focus:-top-3 peer-focus:text-sm peer-focus:text-blue-400">
                   Your Message
                 </label>
               </div>
 
+              {/* Status messages */}
+              {status === 'success' && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-emerald-400 text-sm text-center"
+                >
+                  Message sent! I'll get back to you within 24 hours.
+                </motion.p>
+              )}
+              {status === 'error' && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-red-400 text-sm text-center"
+                >
+                  Something went wrong. Please try again or email me directly.
+                </motion.p>
+              )}
+
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 transition-all rounded-lg text-white font-semibold flex items-center justify-center gap-2"
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 transition-all rounded-lg text-white font-semibold flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
-                  'Sending...'
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    </svg>
+                    Sending...
+                  </span>
                 ) : (
                   <>
                     <FiSend /> Send Message
@@ -129,6 +175,7 @@ const Contact = () => {
             </form>
           </motion.div>
 
+          {/* Right side info */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -137,13 +184,13 @@ const Contact = () => {
             className="space-y-8"
           >
             <div className="bg-gray-800/50 backdrop-blur-sm p-8 rounded-xl border border-gray-700 shadow-lg">
-              <h3 className="text-2xl font-semibold text-white mb-6 flex items-center">
-                <FiMail className="mr-3 text-blue-400" />
+              <h3 className="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
+                <FiMail className="text-blue-400" />
                 Email Me
               </h3>
               <a
                 href="mailto:arshagarwal08@gmail.com"
-                className="text-xl text-blue-400 hover:underline break-all"
+                className="text-blue-400 hover:underline break-all"
               >
                 arshagarwal08@gmail.com
               </a>
@@ -156,37 +203,37 @@ const Contact = () => {
                   href="https://github.com/arshagarwal08"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white transition-all text-sm"
                 >
-                  <FiGithub className="mr-2" /> GitHub
+                  <FiGithub /> GitHub
                 </a>
                 <a
                   href="https://www.linkedin.com/in/arshagarwal08"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-lg text-white transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-700 hover:bg-blue-600 rounded-lg text-white transition-all text-sm"
                 >
-                  <FiLinkedin className="mr-2" /> LinkedIn
+                  <FiLinkedin /> LinkedIn
                 </a>
                 <a
                   href="https://leetcode.com/arshagarwal08"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center px-4 py-2 bg-yellow-600/90 hover:bg-yellow-600 rounded-lg text-white transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-yellow-600/90 hover:bg-yellow-600 rounded-lg text-white transition-all text-sm"
                 >
-                  <SiLeetcode className="mr-2" /> LeetCode
+                  <SiLeetcode /> LeetCode
                 </a>
               </div>
             </div>
 
             <div className="bg-gradient-to-r from-blue-600/20 to-emerald-600/20 p-8 rounded-xl border border-gray-700 shadow-lg">
-              <h3 className="text-xl font-semibold text-white mb-4">Let's Build Something Amazing</h3>
-              <p className="text-gray-300">
-                Whether you have a project idea, need consultation, or just want to connect,
-                I'm always open to interesting conversations and collaborations.
+              <h3 className="text-xl font-semibold text-white mb-3">Let's Build Something</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Whether you need a landing page, a brand site, or something custom — I'm open to projects of all sizes. Let's talk.
               </p>
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>

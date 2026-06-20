@@ -9,7 +9,7 @@ const Navbar = () => {
   const [navbarHeight, setNavbarHeight] = useState(0);
   const isScrolling = useRef(false);
 
-  const navItems = ['home', 'about', 'projects', 'skills', 'contact'];
+  const navItems = ['home', 'about', 'services', 'work', 'projects', 'skills', 'contact'];
 
   useEffect(() => {
     const header = document.querySelector('header');
