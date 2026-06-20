@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FaDownload, FaGithub } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
 import { FiZap, FiSmartphone, FiMessageSquare, FiPackage } from 'react-icons/fi';
 
 const About = () => {
@@ -115,18 +115,6 @@ const About = () => {
                   <FaGithub /> GitHub
                 </a>
               </div>
-<<<<<<< HEAD
-              {/* <a
-                href="https://drive.google.com/file/d/1NQcUY3f8JqjVfJcAdaR6RsziFGpqStfU/view?usp=drive_link"
-=======
-              <a
-                href="https://drive.google.com/file/d/1W_2MwQRGkwyYWvkfgBo28G_zdhUtPoLT/view?usp=drive_link"
->>>>>>> 0567150581a5658dcf3b31248875ee11bf816b16
-                download
-                className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors text-sm"
-              >
-                <FaDownload className="mr-2" /> Download Resume
-              </a> */}
             </motion.div>
           </div>
 
