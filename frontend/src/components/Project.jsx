@@ -74,7 +74,6 @@ const Projects = () => {
               transition={{ duration: 0.5 }}
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
-              onClick={() => setFeaturedProject(project)}
             >
               <ProjectCard 
                 {...project} 
